@@ -1,0 +1,23 @@
+{
+  "rules": {
+    "addresses": {
+      ".indexOn": ["editUrl", "shareUrl"],
+      "$address": {
+      	".read": "true"
+      },
+      ".write": "false"
+    },
+		"shares": {
+      "$share": {
+        ".read": "true"
+      },
+			".write": "false"
+    },
+		"edits": {
+      "$edit": {
+        ".read": "true"
+      },
+			".write": "false"
+    }
+  }
+}

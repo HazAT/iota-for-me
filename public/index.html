@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>IOTA for ME</title>
+    <meta name="description" content="Your IOTA address link shortener. Enter your wallet address, get and edit and share url. Share the url with your followers to receive donations and change the address afterwards with your edit url." />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <style type="text/css">
+      body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #bg {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background-size: cover;
+        filter: blur(1px);
+        background: -webkit-radial-gradient(rgb(63, 81, 181), rgb(5, 27, 50));
+        background: radial-gradient(rgb(63, 81, 181), rgb(5, 27, 50));
+      }
+      a {
+        color: inherit;
+        text-decoration: inherit;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bg"></div>
+    <div id="root"></div>
+  </body>
+</html>
