@@ -63,11 +63,16 @@ class Layout extends React.Component {
             className={classes.feedbackLink}
             href="https://twitter.com/iotaforme"
           >
-            @iotaforme
+            Twitter
           </a>
-
-          <a className={classes.feedbackLink} href="mailto:hello@iotafor.me">
-            hello@iotafor.me
+          <span className={classes.feedbackLink}>|</span>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            className={classes.feedbackLink}
+            href="https://github.com/HazAT/iota-for-me"
+          >
+            Github
           </a>
         </Typography>
       </div>
