@@ -66,7 +66,7 @@ class Edit extends Component {
     ) {
       let address = nextProps.editPopulated[nextProps.url].address.address;
       this.setState({ address, addressSet: true });
-      nextProps.refreshBalance(address);
+      // nextProps.refreshBalance(address);
     }
   }
 
@@ -135,7 +135,6 @@ class Edit extends Component {
         <Typography type="title" gutterBottom align="center">
           Update your IOTA wallet address
         </Typography>
-        {this.renderBalance()}
 
         <TextField
           label="IOTA Address"
