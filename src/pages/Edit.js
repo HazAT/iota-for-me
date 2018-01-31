@@ -13,6 +13,7 @@ import green from 'material-ui/colors/green';
 import IOTA from 'iota.lib.js';
 import { appConfig } from '../config';
 import { storeAddress } from '../actions/storeAddress';
+import { refreshBalance } from '../actions/iota';
 
 const styles = theme => ({
   wrapper: {
@@ -65,6 +66,7 @@ class Edit extends Component {
     ) {
       let address = nextProps.editPopulated[nextProps.url].address.address;
       this.setState({ address, addressSet: true });
+      nextProps.refreshBalance(address);
     }
   }
 
@@ -95,6 +97,16 @@ class Edit extends Component {
     gcaptcha.reset();
   };
 
+  renderBalance() {
+    let content = 'Loading...';
+    if (this.props.balance.error !== undefined) {
+      content = 'Error loading balance, reload page to try again';
+    } else if (this.props.balance.result) {
+      content = this.props.balance.result.formattedBalance;
+    }
+    return <Typography type="headline">Balance: {content}</Typography>;
+  }
+
   renderAddress() {
     let { editPopulated, edit, classes, url, storeAddressState } = this.props;
 
@@ -121,11 +133,10 @@ class Edit extends Component {
     return (
       <div className={classes.content}>
         <Typography type="title" gutterBottom align="center">
-          Update your IOTA wallet address here
+          Update your IOTA wallet address
         </Typography>
-        <Typography type="button" gutterBottom>
-          <a href={`${appConfig.baseUrl}/donate/${shareUrl}`}>Your share url</a>
-        </Typography>
+        {this.renderBalance()}
+
         <TextField
           label="IOTA Address"
           placeholder="paste your address to receive donations here"
@@ -160,6 +171,15 @@ class Edit extends Component {
             Update
             {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
           </Button>
+          <Button
+            size="small"
+            raised
+            color="primary"
+            className={classes.button}
+            href={`/donate/${shareUrl}`}
+          >
+            Goto Share page
+          </Button>
         </div>
       </div>
     );
@@ -176,14 +196,16 @@ function mapStateToProps(state, props) {
   return {
     editPopulated: populate(state.firebase, 'edits', populates),
     edit: state.firebase.data.edits,
-    storeAddressState: state.address
+    storeAddressState: state.address,
+    balance: state.balance
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     storeAddress: (captcha, address, addressId) =>
-      dispatch(storeAddress(captcha, address, addressId))
+      dispatch(storeAddress(captcha, address, addressId)),
+    refreshBalance: address => dispatch(refreshBalance(address))
   };
 }
 

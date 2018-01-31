@@ -11,7 +11,8 @@ import 'typeface-roboto';
 
 const initialState = window.__INITIAL_STATE__ || {
   firebase: {},
-  address: { loading: false }
+  address: { loading: false },
+  balance: { loading: false }
 };
 const store = configureStore(initialState);
 
