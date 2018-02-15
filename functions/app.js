@@ -10,7 +10,8 @@ const rp = require('request-promise');
 
 const IOTA = require('iota.lib.js');
 
-const public = express();
+const captchaEndpoint = express();
+const publicEndpoint = express();
 
 const validateRecaptcha = (req, res, next) => {
   let captcha;
@@ -42,11 +43,11 @@ const validateRecaptcha = (req, res, next) => {
   });
 };
 
-public.use(cors({ origin: true }));
-public.use(validateRecaptcha);
+captchaEndpoint.use(cors({ origin: true }));
+captchaEndpoint.use(validateRecaptcha);
 
-public.options('*');
-public.post('/storeAddress', (req, res) => {
+captchaEndpoint.options('*');
+captchaEndpoint.post('/storeAddress', (req, res) => {
   let address = req.body.address;
   if (!new IOTA().valid.isAddress(address)) {
     res.status(400).send('No valid IOTA address');
@@ -93,4 +94,31 @@ public.post('/storeAddress', (req, res) => {
   }
 });
 
-exports.public = functions.https.onRequest(public);
+publicEndpoint.use(cors({ origin: true }));
+publicEndpoint.options('*');
+publicEndpoint.post('/getBalance', (req, res) => {
+  let addressId = req.body.addressId;
+  admin
+    .database()
+    .ref('/addresses')
+    .child(addressId)
+    .once('value')
+    .then(snapshot => {
+      var address = snapshot.val();
+      var iota = new IOTA({
+        host: 'http://nodes.iota.fm',
+        port: 80
+      });
+
+      iota.api.getBalances([address.address], 10, (error, success) => {
+        if (error) {
+          res.status(400).send(error);
+        } else {
+          res.send(success);
+        }
+      });
+    });
+});
+
+exports.public = functions.https.onRequest(captchaEndpoint);
+exports.api = functions.https.onRequest(publicEndpoint);

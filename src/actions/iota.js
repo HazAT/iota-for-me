@@ -1,5 +1,4 @@
 import ActionTypes from '../constants/actionTypes';
-import IOTA from 'iota.lib.js';
 
 function iotaBalanceRequestedAction() {
   return {
@@ -21,21 +20,20 @@ function iotaBalanceErrorAction(error) {
   };
 }
 
-export function refreshBalance(address) {
+export function refreshBalance(addressId) {
   return dispatch => {
     dispatch(iotaBalanceRequestedAction());
 
-    var iota = new IOTA({
-      host: 'http://nodes.iota.fm',
-      port: 80
-    });
-
-    iota.api.getBalances([address], 10, (error, success) => {
-      if (error) {
-        dispatch(iotaBalanceErrorAction(error));
-      } else {
-        dispatch(iotaBalanceSuccessAction(success));
-      }
-    });
+    fetch(`https://us-central1-iota-for-me.cloudfunctions.net/api/getBalance`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({ addressId })
+    })
+      .then(response => response.json())
+      .then(data => dispatch(iotaBalanceSuccessAction(data)))
+      .catch(error => dispatch(iotaBalanceErrorAction(error)));
   };
 }
